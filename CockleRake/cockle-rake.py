@@ -45,7 +45,7 @@ def teardown_request(exception):
 @app.route("/")
 def hello():
   # Get the recent readings
-  readings = g.db.execute('select first, second, workshop, created_at, temperature from cockles left join readings where readings.cockle_id = cockles.id order by created_at desc');
+  readings = g.db.execute('select first, second, workshop, created_at, temperature from cockles left join readings where readings.cockle_id = cockles.id order by created_at desc limit 10');
   latest = [dict(name=row[0]+"-"+row[1]+"-"+row[2], recorded_at=row[3], value=row[4]) for row in readings.fetchall()]
   return render_template('index.html', readings = latest)
 
