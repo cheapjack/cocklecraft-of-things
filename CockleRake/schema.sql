@@ -8,7 +8,8 @@ create table cockles (
 drop table if exists readings;
 create table readings (
   id integer primary key autoincrement,
+  created_at text not null,
   cockle_id integer not null,
-  temperature float not null
+  temperature real not null
 );
 

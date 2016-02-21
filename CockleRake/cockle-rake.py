@@ -4,6 +4,7 @@ from flask import g
 from flask import Flask
 from flask import render_template
 from flask import request
+import datetime
 
 app = Flask(__name__)
 # Load our configuration from the file listed in the
@@ -43,7 +44,10 @@ def teardown_request(exception):
 
 @app.route("/")
 def hello():
-  return render_template('index.html')
+  # Get the recent readings
+  readings = g.db.execute('select first, second, workshop, created_at, temperature from cockles left join readings where readings.cockle_id = cockles.id order by created_at desc');
+  latest = [dict(name=row[0]+"-"+row[1]+"-"+row[2], recorded_at=row[3], value=row[4]) for row in readings.fetchall()]
+  return render_template('index.html', readings = latest)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -53,28 +57,52 @@ def register():
     iterations = 0
     while iterations < 1000:
       # Choose a first and second name at random
-      first = random.choice(names)
-      second = random.choice(names)
+      first = random.choice(names).lower()
+      second = random.choice(names).lower()
+      workshop = app.config['WORKSHOP_NAME'].lower()
       # See if this is already registered
-      cur = g.db.execute('select first, second, workshop from cockles where first = ? and second = ? and workshop = ?', [first, second, app.config['WORKSHOP_NAME']])
+      cur = g.db.execute('select first, second, workshop from cockles where first = ? and second = ? and workshop = ?', [first, second, workshop])
       if not cur.fetchone():
         # It doesn't already exist, so we can use this one
-        g.db.execute('insert into cockles (first, second, workshop) values (?, ?, ?)', [first, second, app.config['WORKSHOP_NAME']])
+        g.db.execute('insert into cockles (first, second, workshop) values (?, ?, ?)', [first, second, workshop])
         g.db.commit()
-        return render_template('registered.html', name=first+"-"+second+"-"+app.config['WORKSHOP_NAME'])
+        return render_template('registered.html', name=first+"-"+second+"-"+workshop)
       iterations += 1
     return first + "-" + second + "-" + app.config['WORKSHOP_NAME']
   else:
     return render_template('register.html')
 
 @app.route("/<first>-<second>-<workshop>", methods=['GET', 'POST'])
-def temperature():
+def temperature(first, second, workshop):
+  first = first.lower()
+  second = second.lower()
+  workshop = workshop.lower()
   if request.method == 'POST':
     # Record the temperature
-    return "new user - "
+    now = datetime.datetime.now()
+    cur = g.db.execute('select id from cockles where first = ? and second = ? and workshop = ?', [first, second, workshop])
+    cockle = cur.fetchone()
+    if cockle:
+      # We've got a cockle
+      g.db.execute('insert into readings (created_at, cockle_id, temperature) values (?, ?, ?)', [now, cockle[0], request.form['temperature']])
+      g.db.commit()
+      return "success"
+    else:
+      return "not found"
   else:
     # Return the most recent recording
-    return "new user form"
+    cur = g.db.execute('select id from cockles where first = ? and second = ? and workshop = ?', [first, second, workshop])
+    cockle = cur.fetchone()
+    if cockle:
+      # We've got a cockle
+      # Find its most recent recording
+      readings = g.db.execute('select created_at, temperature from readings where cockle_id = ? order by created_at desc', [cockle[0]]);
+      latest = readings.fetchone()
+      if latest:
+        return "{'recorded_at':'"+latest[0]+"', 'value':"+str(latest[1])+"}"
+      else:
+        return "none"
+    return abort(404)
 
 if __name__ == "__main__":
   app.debug = True
