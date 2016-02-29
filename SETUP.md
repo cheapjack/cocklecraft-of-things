@@ -27,9 +27,3 @@ For the temperature sensor we'll need an extra library.
  1. Click on the library by Miles Burton and others.
  1. Click on the Install button.
 
-### Tips
-
- * If you get the "espcomm failed" error, try turning the Thing off and then on just after you've hit the upload button.  Getting the timing right can be a bit tricky, but persevere.
- * Once you've uploaded the code, you need to unplug the USB-Serial board from the Thing for the program to start running.
-
-
