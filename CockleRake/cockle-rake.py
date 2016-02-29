@@ -106,4 +106,5 @@ def temperature(first, second, workshop):
 
 if __name__ == "__main__":
   app.debug = True
-  app.run()
+  # Include the "host='0.0.0.0'" so that external clients can connect
+  app.run(host='0.0.0.0')
