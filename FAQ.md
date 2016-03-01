@@ -5,6 +5,7 @@ This page has some hints, tips and links to help with some of the common issues 
  * [Sparkfun Thing hookup guide](https://learn.sparkfun.com/tutorials/esp8266-thing-hookup-guide/hardware-overview) - an overview of what's what on the physical board.
  * If you get the "espcomm failed" error, try turning the Thing off and then on just after you've hit the upload button.  Getting the timing right can be a bit tricky, but persevere.
  * Once you've uploaded the code, you need to unplug the USB-Serial board from the Thing for the program to start running.
+ * [DS18B20 temperature sensor data sheet](http://datasheet.octopart.com/DS18B20%2B-Dallas-Semiconductor-datasheet-11984949.pdf)
 
 ## BasicTempSender
 
