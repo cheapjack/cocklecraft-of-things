@@ -35,7 +35,7 @@ const int kRedPin = 0;
 const int kGreenPin = 12;
 const int kBluePin = 13;
 
-#define COCKLE_NAME "ainsdale-meols-mersey"
+#define COCKLE_NAME "INSERT YOUR COCKLE REGISTRATION NAME HERE"
 
 void setup() {
 
@@ -72,7 +72,7 @@ void setup() {
     }
 
     //WiFiMulti.addAP("SSID", "PASSWORD");
-    WiFiMulti.addAP("DoESLiverpool", "decafbad00");
+    WiFiMulti.addAP("WIFI NETWORK NAME/SSID", "WIFI PASSWORD");
     digitalWrite(kLEDPin, LOW);
 
     gSensors.begin();
@@ -89,8 +89,6 @@ void loop() {
         digitalWrite(kLEDPin, HIGH);
         gSensors.requestTemperatures();
         USE_SERIAL.print("[HTTP] begin...\n");
-        // configure traged server and url
-        //http.begin("192.168.1.12", 443, "/test.html", true, "7a 9c f4 db 40 d3 62 5a 6e 21 bc 5c cc 66 c8 3e a1 45 59 38"); //HTTPS
 
         // Prepare the data we need to send to the server
         String temperature = "temperature=";
@@ -98,8 +96,8 @@ void loop() {
 
         String path = "/";
         path += COCKLE_NAME;
-        //sprintf(path, "/%s", COCKLE_NAME);
-        http.begin("192.168.0.15", 5000, path); //HTTP
+        // Prepare the HTTP request
+        http.begin("COCKLERAKE SERVER ADDRESS", COCKLERAKE_SERVER_PORT_NUMBER, path); //HTTP
         http.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
         USE_SERIAL.print("[HTTP] POST...\n");
@@ -107,7 +105,7 @@ void loop() {
         int httpCode = http.POST(temperature);
         if(httpCode) {
             // HTTP header has been send and Server response header has been handled
-            USE_SERIAL.printf("[HTTP] GET... code: %d\n", httpCode);
+            USE_SERIAL.printf("[HTTP] POST... code: %d\n", httpCode);
             // Flash the LED to show we're doing something
             digitalWrite(kLEDPin, LOW);
             delay(300);
@@ -143,6 +141,7 @@ void loop() {
     digitalWrite(kRedPin, HIGH);
     digitalWrite(kGreenPin, HIGH);
     digitalWrite(kBluePin, HIGH);
+    // Wait for a while before taking the next reading
     delay(6000);
 }
 
