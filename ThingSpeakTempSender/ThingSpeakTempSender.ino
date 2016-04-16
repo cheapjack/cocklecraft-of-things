@@ -1,8 +1,8 @@
 /**
- * BasicTempSender.ino
+ * ThingSpeakTempSender.ino
  *
  * Simple sketch to upload temperature readings taken from a DS18B20 temperature
- * sensor to the CockleRake server.
+ * sensor to a ThingSpeak channel.
  * 
  * Part of the Cocklecraft project - https://github.com/mcqn/cocklecraft-of-things/
  * 
@@ -35,7 +35,7 @@ const int kRedPin = 0;
 const int kGreenPin = 12;
 const int kBluePin = 13;
 
-#define COCKLE_NAME "INSERT YOUR COCKLE REGISTRATION NAME HERE"
+#define THINGSPEAK_API_KEY "REPLACE THIS WITH YOUR THINGSPEAK API KEY"
 
 void setup() {
 
@@ -91,13 +91,14 @@ void loop() {
         USE_SERIAL.print("[HTTP] begin...\n");
 
         // Prepare the data we need to send to the server
-        String temperature = "temperature=";
+        String temperature = "field1=";
         temperature += gSensors.getTempCByIndex(0);
+        // Append our API key
+        temperature += "&api_key=";
+        temperature += THINGSPEAK_API_KEY;
 
-        String path = "/";
-        path += COCKLE_NAME;
         // Prepare the HTTP request
-        http.begin("COCKLERAKE SERVER ADDRESS", COCKLERAKE_SERVER_PORT_NUMBER, path); //HTTP
+        http.begin("api.thingspeak.com", 443, "/update", true); //HTTPS
         http.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
         USE_SERIAL.print("[HTTP] POST...\n");
@@ -142,6 +143,6 @@ void loop() {
     digitalWrite(kGreenPin, HIGH);
     digitalWrite(kBluePin, HIGH);
     // Wait for a while before taking the next reading
-    delay(6000);
+    delay(60000UL);
 }
 
