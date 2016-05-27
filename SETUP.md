@@ -30,6 +30,8 @@
 
 These instructions are for [this super-cheap ESP8266 board](http://www.aliexpress.com/item/ESP8266-serial-WIFI-Witty-cloud-Development-Board-ESP-12F-module-MINI-nodemcu/32569199462.html)
 
+Notes: These boards have an on-board RGB LED, wired to pins 15(red), 12(green) and 13(blue).
+
  1. Install the latest version of the Arduino IDE - [https://www.arduino.cc/en/Main/Software](https://www.arduino.cc/en/Main/Software)
  1. Run the Arduino IDE and follow the instructions in [Sparkfun's Thing Guide](https://learn.sparkfun.com/tutorials/esp8266-thing-hookup-guide/installing-the-esp8266-arduino-addon) to install the add-on for the ESP8266.
  1. Plug the micro-USB cable into the connector on the USB-serial board (the one with two buttons on it)
