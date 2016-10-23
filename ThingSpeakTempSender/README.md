@@ -14,6 +14,15 @@
 1. Once your channel is created, click on the *API Keys* view and copy the *Write API Key* to the ```THINGSPEAK_API_KEY``` value in the sketch.
 1. Find the ```WiFiMulti.addAP``` line and change it to the SSID and password for your WiFi network.
 
+## Finding the HTTPS fingerprint
+
+The last parameter to the `http.begin` call is the HTTPS fingerprint.  This is used by your Cockle to check that it's really talking to the ThingSpeak server and not someone pretending to be the ThingSpeak server.
+
+ 1. When you're on the ThingSpeak page in a web browser (these instructions are for Firefox, but it should be similar for other browsers), go to `Tools` and then `Page Info` in the menu
+ 1. Then choose the `Security` pane in the dialog box that opens up
+ 1. Then choose `View Certificate`
+ 1. That will bring up a load of details about the certificate the server is using to prove that it is who it says it is.  You can check that the fingerprint provided in the `SHA1 Fingerprint` field matches the one in the last parameter in the call to `http.begin` in the code.
+
 ## Links
 
  * [ThingSpeak documentation](https://uk.mathworks.com/help/thingspeak/index.html)
