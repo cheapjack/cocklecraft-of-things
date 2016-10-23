@@ -4,6 +4,7 @@ from flask import g
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask import Response
 import datetime
 
 app = Flask(__name__)
@@ -99,7 +100,10 @@ def temperature(first, second, workshop):
       readings = g.db.execute('select created_at, temperature from readings where cockle_id = ? order by created_at desc', [cockle[0]]);
       latest = readings.fetchone()
       if latest:
-        return "{'recorded_at':'"+latest[0]+"', 'value':"+str(latest[1])+"}"
+        resp = Response("{\"recorded_at\":\""+latest[0]+"\", \"value\":"+str(latest[1])+"}")
+        resp.headers['Access-Control-Allow-Origin']="*"
+        resp.headers['Content-Type']="application/json"
+        return resp;
       else:
         return "none"
     return abort(404)
