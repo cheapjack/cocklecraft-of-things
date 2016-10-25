@@ -41,3 +41,36 @@ Steps required to install CockleRake (on a Linux-based system at least)
  ```
     python cockle-rake.py
  ```
+
+## Running Automatically
+
+On a Raspberry Pi you can use the cocklerake.service and run_server files to make the CockleRake server start when the computer boots up.
+
+To set that up...
+
+**Note: This assumes that CockleRake has been installed in /home/pi/cocklecraft-of-things/CockleRake.  If you've installed it elsewhere you'll need to modify the cocklerake.service file and update the WorkingDirectory**
+
+1. Install the service script
+
+```
+    sudo cp cocklerake.service /lib/systemd/system/
+```
+
+1. Enable the service
+
+```
+    sudo systemctl enable cocklerake.service
+```
+
+1. Start the service
+
+```
+    sudo service cocklerake start
+```
+
+1. You can check on the status of the service at any time with
+
+```
+    sudo service cocklerake status
+```
+
