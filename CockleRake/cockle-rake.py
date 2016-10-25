@@ -127,7 +127,7 @@ def get_observation(location):
   observations = g.db.execute('select created_at, observation from observations where location = ? order by created_at desc', [location]);
   latest = observations.fetchone()
   if latest:
-    resp = Response("{\"recorded_at\":\""+latest[0]+"\", \"value\":"+str(latest[1])+"}")
+    resp = Response("{\"recorded_at\":\""+latest[0]+"\", \"value\":\""+str(latest[1])+"\"}")
     resp.headers['Access-Control-Allow-Origin']="*"
     resp.headers['Content-Type']="application/json"
     return resp;
