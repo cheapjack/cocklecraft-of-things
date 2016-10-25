@@ -1,0 +1,23 @@
+# systemd service file to run the CockleRake server
+
+[Unit]
+Description=Run the CockleRake server
+Wants=network.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+Nice=5
+WorkingDirectory=/home/pi/cocklecraft-of-things/CockleRake/
+ExecStart=/home/pi/cocklecraft-of-things/CockleRake/run_server
+# Use SIGINT to stop
+KillSignal=SIGINT
+# Auto restart on crash
+Restart=on-failure
+# Tag things in the log
+SyslogIdentifier=CockleRake
+#StandardOutput=syslog
+
+[Install]
+WantedBy=multi-user.target

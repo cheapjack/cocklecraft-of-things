@@ -1,0 +1,5 @@
+#!/bin/sh
+
+. bin/activate
+export COCKLE_SETTINGS=settings.cfg
+python cockle-rake.py
