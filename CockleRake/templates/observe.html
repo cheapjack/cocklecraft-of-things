@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block head %}
+    <title>Make an Observation</title>
+{% endblock %}
+{% block body %}
+    <h1>Make an Observation</h1>
+    <form action="/observe" method="post">
+      <label for="location">Location:</label>
+      <input type="text" name="location" />
+      <label for="observation">Observation:</label>
+      <input type="text" name="observation" />
+      <input type="submit" name="Record" value="Click here to record the observation">
+    </form>
+{% endblock %}

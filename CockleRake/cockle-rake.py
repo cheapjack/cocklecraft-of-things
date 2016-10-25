@@ -48,7 +48,9 @@ def hello():
   # Get the recent readings
   readings = g.db.execute('select first, second, workshop, created_at, temperature from cockles left join readings where readings.cockle_id = cockles.id order by created_at desc limit 10');
   latest = [dict(name=row[0]+"-"+row[1]+"-"+row[2], recorded_at=row[3], value=row[4]) for row in readings.fetchall()]
-  return render_template('index.html', readings = latest)
+  observations = g.db.execute('select location, created_at, observation from observations order by created_at desc limit 10');
+  latest_observations = [dict(location=row[0], recorded_at=row[1], observation=row[2]) for row in observations.fetchall()]
+  return render_template('index.html', readings = latest, observations = latest_observations)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -72,6 +74,16 @@ def register():
     return first + "-" + second + "-" + app.config['WORKSHOP_NAME']
   else:
     return render_template('register.html')
+
+import urllib2
+
+@app.route("/space", methods=['GET'])
+def space():
+  info = urllib2.urlopen("http://api.open-notify.org/astros.json").read()
+  resp = Response(info)
+  resp.headers['Access-Control-Allow-Origin']="*"
+  resp.headers['Content-Type']="application/json"
+  return resp
 
 @app.route("/<first>-<second>-<workshop>", methods=['GET', 'POST'])
 def temperature(first, second, workshop):
@@ -107,6 +119,32 @@ def temperature(first, second, workshop):
       else:
         return "none"
     return abort(404)
+
+@app.route("/<location>", methods=['GET'])
+def get_observation(location):
+  location = location.lower()
+  # Return the most recent observation for this location
+  observations = g.db.execute('select created_at, observation from observations where location = ? order by created_at desc', [location]);
+  latest = observations.fetchone()
+  if latest:
+    resp = Response("{\"recorded_at\":\""+latest[0]+"\", \"value\":"+str(latest[1])+"}")
+    resp.headers['Access-Control-Allow-Origin']="*"
+    resp.headers['Content-Type']="application/json"
+    return resp;
+  else:
+    return "none"
+
+@app.route("/observe", methods=['GET', 'POST'])
+def make_observation():
+  if request.method == 'POST':
+    # Record the observation
+    location = request.form['location'].lower()
+    now = datetime.datetime.now()
+    g.db.execute('insert into observations (created_at, location, observation) values (?, ?, ?)', [now, location, request.form['observation']])
+    g.db.commit()
+    return "success"
+  else:
+    return render_template('observe.html')
 
 if __name__ == "__main__":
   app.debug = True

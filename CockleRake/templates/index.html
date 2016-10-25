@@ -12,4 +12,10 @@
       <li>At {{ reading.recorded_at }} {{ reading.name }} recorded temperature {{ reading.value }}</li>
     {% endfor %}
     </ul>
+    <h2>Recent observations...</h2>
+    <ul class="observations" id="latest">
+    {% for observation in observations %}
+      <li>At {{ observation.recorded_at }}, {{ observation.observation }} was observed at {{ observation.location }}</li>
+    {% endfor %}
+    </ul>
 {% endblock %}

@@ -12,4 +12,11 @@ create table readings (
   cockle_id integer not null,
   temperature real not null
 );
+drop table if exists observations;
+create table observations (
+  id integer primary key autoincrement,
+  created_at text not null,
+  location text not null,
+  observation text not null
+);
 
