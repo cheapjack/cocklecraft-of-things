@@ -1,20 +1,24 @@
-## Getting Started with Domestic Science 
+## Getting Started with Cockles for Domestic Science 
+
+![http://drinkme.textadventuretime.co.uk/wp-content/uploads/2016/11/header-1.png]
+
+Using the cocklecraft-of-things with Twine for Interactive Non-Fiction Adventures and fun with freshwater in Brazil for [Beba-Me | Drink-Me](http://drinkme.textadventuretime.co.uk/) for [Domestic Science](http://domesticscience.org.uk)
 
 Have a look in the `~/cocklecraft-of-things` folder for more detailed  documentation.
 
 You should also look at the [sugarcube](http://www.motoslave.net/sugarcube/) documentation.
 
-You can read about how to use the Cockle data in [Twine here](/TwineDemo.html)
+You can read about how to use the Cockle data in [Twine here](/TwineDemo.md)
 
-Basically on this Pi Raspbian image we can
+Basically this is designed to clone onto a Pi Raspbian image so we can
 
  * Use the Pi as a WiFi access point
  * Serve html and css from `/var/www/html` through the apache server
   * Serve a domesticscience portal `index.html` to Hwa Young's text adventure `brazil.html`
  * Use the network name `domesticscience` to allow most devices to access at `domesticscience.local`
- * Serve a cocklerake server
+ * Serve a mcqn cocklerake server
 
-Other tools:
+Other tools on board that image:
 
  * apache webserver
  * mcpi
