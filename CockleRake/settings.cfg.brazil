@@ -1,0 +1,13 @@
+# Configuration for your CockleRake server
+
+# Name for the server.
+# The global one is called Mersey, it should be changed for each
+# workshop that's run, so Cockles registered at each one don't
+# clash with each other.
+# WORKSHOP_NAME="Mersey"
+WORKSHOP_NAME="Brazil"
+
+# Name for the database file to hold details of the registered
+# Cockles and any readings they've reported
+DATABASE = "cockles.db"
+

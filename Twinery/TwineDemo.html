@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+</head>
+<body>
+<h2 id="make-a-test-twine-story-upload-to-varwwwhtml">Make a test Twine Story &amp; upload to <code>/var/www/html</code></h2>
+<p>Use an installed version of <code>Twine v2.0.8-11</code> to keep things offline</p>
+<p>We can use the built in SugarCube or add the SugarCube-2 format from <a href="http://www.motoslave.net/sugarcube/2/docs/twine-2.html#installation">here</a>, both work, but add it locally <code>/SugarCube-2/format.js</code> otherwise it will need to access the <code>format.js</code> online.</p>
+<p>Make a new adventure. We'll be putting javascript in the Twine page body to poll data from a Cockle Server in some <code>&lt;&lt;script&gt;&gt;&lt;&lt;/script&gt;&gt;</code> tags in twine then use <code>&lt;span id=&quot;#mycustomid&quot;&gt;something&lt;/span&gt;</code> in the html of each Twine page to display results from JSON.</p>
+<p>We won't be adding the <code>JQUERY</code> calls globally in the <code>Edit Story JavaScript</code> as they'll only be called once and then ignored and potentially forgotten about in the rest of the story. It would also stop the data being updated. So we will simply use <code>&lt;&lt;script&gt;&gt;</code> tags in the Twine body instead.</p>
+<h3 id="at-presentyou-can">At present, you can:</h3>
+<p>Read timestamped temperature data from the waterproof DS1820B Dallas Temperature sensor in the Tiffin tin and serve it to [domesticscience.local:5000}(http://domesticscience.local:5000&quot;)</p>
+<p>You can access the temperature data at <a href="http://domesticscience.local:5000/hightown-ainsdale-brazil">/hightown-ainsdale-brazil</a></p>
+<p>You can access observation data at <a href="http://domesticscience.local:5000/location">domesticscience.local:5000/location</a> where <code>location</code> is the observations location which you defined when making the observation.</p>
+<p>It's best to not use <code>-</code> or <code>SPACE</code> characters in the location as it can confuse the JSON and mean you have to replace every <code>SPACE</code> with <code>%20</code></p>
+<p>Here's some example Twine content in Portuguese in the <code>Start</code> location with <code>html</code> and <code>JQUERY</code> inside it</p>
+<pre><code>Ola! A temperatura é de &lt;span id=&quot;weather-temp&quot;&gt;???&lt;/span&gt; graus centígrados.  Foi neste momento &lt;span id=&quot;weather-timestamp&quot;&gt;sometime or other&lt;/span&gt;.
+
+Está &lt;span id=&quot;weather-parse&quot;&gt;some description of temperature&lt;/span&gt;
+
+Hwa Young observedo: &#39;&lt;span id=&quot;observation&quot;&gt;something&lt;/span&gt;&#39; as &lt;span id=&quot;observation-timestamp&quot;&gt;algum ou outra&lt;/span&gt;.
+
+&lt;span id=&quot;hidden&quot;&gt;Você pode ver a [[floresta quente|forest]]&lt;/span&gt;
+
+&lt;span id=&quot;hidden&quot;&gt;You can see the [[hot forest|forest]]&lt;/span&gt;
+
+&lt;&lt;script&gt;&gt;
+//access the observation endpoint at /location
+$.ajax({
+    dataType: &quot;json&quot;,
+    url: &quot;http://domesticscience.local:5000/location&quot;,
+    success: function( result ) {
+        $( &quot;#observation&quot; ).html( &quot;&lt;strong&gt;&quot; + result.value + &quot;&lt;/strong&gt;&quot;);
+        $( &quot;#observation-timestamp&quot; ).html( &quot;&lt;strong&gt;&quot; + result.recorded_at + &quot;&lt;/strong&gt;&quot;);
+        }
+});
+
+
+$.ajax({
+    dataType: &quot;json&quot;,
+    url: &quot;http://domesticscience.local:5000/hightown-ainsdale-brazil&quot;,
+    success: function( result ) {
+        // put the code you want to run each time you visit this twine page
+        $( &quot;#weather-temp&quot; ).html( &quot;&lt;strong&gt;&quot; + result.value + &quot;&lt;/strong&gt;&quot; );
+        $( &quot;#weather-timestamp&quot; ).html( &quot;&lt;strong&gt;&quot; + result.recorded_at + &quot;&lt;/strong&gt;&quot; );
+        // for example
+        if (result.value &gt; 24){
+            $( &quot;#weather-parse&quot; ).addClass(&quot;hot&quot;);
+            $( &quot;#weather-parse&quot; ).html(&quot;hot&quot;);
+            // use .show() to reveal the text in &lt;span id = &quot;hidden&quot;&gt;&lt;/span&gt;
+            $( &quot;#hidden&quot; ).show();
+            } else {
+                $( &quot;#weather-parse&quot; ).html(&quot;&lt;strong&gt;cold&lt;/strong&gt;&quot;);
+                // use .hide() to hide the text in &lt;span id = &quot;hidden&quot;&gt;&lt;/span&gt;
+                $( &quot;#hidden&quot; ).hide();
+                $( &quot;#weather-parse&quot; ).removeClass(&quot;hot&quot;);
+                }
+            }
+        });
+&lt;&lt;/script&gt;&gt;</code></pre>
+<h2 id="moment-of-truth">Moment of Truth</h2>
+<p>Now after copy and pasting that in to your Twine app, Test or Play it: if you're connected to the <code>domesticscience</code> WiFi and the CockleRake server is running it should work and the temperature and observation data should be displayed and parsed in the case of temperature with the if/else code.</p>
+<p>Once your happy with it you need to send it to the pi apache server</p>
+<p><code>HwaYoungsMac$ scp /path/to/my/amazingfile pi@domesticscience.local:/home/pi</code></p>
+<p>You'll need the password <code>raspberry</code> again.</p>
+<p>You can then move it from <code>/home/pi</code> to the apache server <code>html</code> folder over ssh on the pi. So when connected by ssh to the pi:</p>
+<p><code>pi@domesticscience:~ $ sudo mv ~/amazingfile /var/www/html</code></p>
+<p>You'll need the password and you may need to change permissions of the new file with <code>sudo chmod 644 /location/of/myamazingfile.html</code></p>
+<p>You can then edit <code>/var/www/html/index.html</code> with vim so that one of the buttons can take you to your adventure.</p>
+<h3 id="good-luck">Good luck!</h3>
+</body>
+</html>

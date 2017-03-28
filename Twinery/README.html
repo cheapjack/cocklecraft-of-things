@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+</head>
+<body>
+<h2 id="getting-started-with-domestic-science">Getting Started with Domestic Science</h2>
+<p>Have a look in the <code>~/cocklecraft-of-things</code> folder for more detailed documentation.</p>
+<p>You should also look at the <a href="http://www.motoslave.net/sugarcube/">sugarcube</a> documentation.</p>
+<p>You can read about how to use the Cockle data in <a href="/TwineDemo.html">Twine here</a></p>
+<p>Basically on this Pi Raspbian image we can</p>
+<ul>
+<li>Use the Pi as a WiFi access point</li>
+<li>Serve html and css from <code>/var/www/html</code> through the apache server</li>
+<li>Serve a domesticscience portal <code>index.html</code> to Hwa Young's text adventure <code>brazil.html</code></li>
+<li>Use the network name <code>domesticscience</code> to allow most devices to access at <code>domesticscience.local</code></li>
+<li>Serve a cocklerake server</li>
+</ul>
+<p>Other tools:</p>
+<ul>
+<li>apache webserver</li>
+<li>mcpi</li>
+<li>node-red</li>
+<li>pip</li>
+<li>pocketmine server (outdated)</li>
+<li>node-red to pocketmine</li>
+<li>git</li>
+<li>vim</li>
+<li>virtualenv</li>
+<li>sqlite3</li>
+</ul>
+<h3 id="using-the-cocklerake-server">Using the cocklerake server</h3>
+<p>Probably best to start with the setup instructions in the <code>experimental</code> branch of the <a href="https://github.com/mcqn/cocklecraft-of-things/tree/experimental">cocklecraft-of-things</a> to get to grips with the wiring and setup of the ESP8266 SparkFun thing which does all our temperature sensing with a Dallas DS1820B waterproof temperature sensor. We've added an arduino setup for a locally served CockleRake server.</p>
+<h2 id="basic-system">Basic System</h2>
+<p>ESP8266 SparkFun thing connects to a WiFi network <code>domesticscience</code> password <code>raspberry</code> and uses a Dallas Temperature sensor to send temperature readings to <a href="http://domesicscience.local:5000">domesticscience</a>, a flask server. Same server also allows you to record observations as Strings with a location which you set and a timestamp</p>
+<p>You can then pull these into Twine pages with JQUERY calls</p>
+<h3 id="getting-going">Getting going</h3>
+<ul>
+<li>Fire up the Pi &amp; Join the <code>domesticscience</code> WiFi Network with password <code>raspberry</code></li>
+<li>Open a termimnal and login to the pi over ssh <code>HwaYoungsMac$ ssh pi@domesticscience.local</code> password as above</li>
+</ul>
+<p>If your offline you may need to set the time and date</p>
+<p><code>$ sudo date --set '2016-10-29 18:26:00'</code></p>
+<p>By default the CockleRake server starts up automatically on boot but if you want to stop it etc:</p>
+<ul>
+<li><strong>stop</strong> <code>pi$ sudo service cocklerake stop</code></li>
+<li><strong>stort</strong> <code>pi$ sudo service cocklerake start</code></li>
+<li><strong>re-stort</strong> <code>pi$ sudo service cocklerake restart</code></li>
+<li><strong>status</strong> <code>pi$ sudo service cocklerake status</code></li>
+</ul>
+<p>The startup service script is in <code>/CockleRake/run_server</code>.</p>
+<p>A registered cockle called <code>hightown-ainsdale-brazil</code> is setup in your tiffin tin and will eventually connect to the Pi's WiFi Access point once turned on.</p>
+<p>These are the normal setup instructions without the auto service start for reference</p>
+<ul>
+<li>Once logged in on the Pi <code>cd</code> into the <code>~/cocklecraft-of-things</code> with <code>pi$ cd ~/cocklecraft-of-things/CockleRake</code></li>
+<li><code>pi$ source bin/activate</code> or <code>pi$ . bin/activate</code> to activate the virtualenv</li>
+<li>setup the settings with <code>pi$ export COCKLE_SETTINGS=settings.cfg</code></li>
+<li>Start the server at <code>domesticscience.local:5000</code> with `pi$ python cockle-rake.py</li>
+</ul>
+<h3 id="using-the-cocklerake-server-1">Using the CockleRake Server</h3>
+<ul>
+<li>You can now on another device, log onto the Pi's WiFi and navigate to <a href="http://domesticscience.local">domesticscience.local</a> which will serve a homepage and portal to your adventures which you could translate or modify however you like. You can look at the cocklerake server using the button link in the homepage or from <a href="http://domesticscience.local:5000">here</a></li>
+<li>If the device wont see <code>domesticscience.local</code> try the ip address <code>172.24.1.1</code> instead.</li>
+<li>You can also log any kind of observation as a string By clicking on the button in the homepage, the cocklerake server or <a href="http://domesticscience.local:5000/observe">make an observation from here</a></li>
+<li>You can record a <code>location</code> as a string for your observation; this is for you to be able to easily find it later and display in game. This could be <code>river</code> or could be <code>chair</code> or it could be <code>feeling</code>. This string becomes the data <strong>endpoint</strong>. It's made so as long as the <code>cockles.db</code> database isn't deleted, all of these locations and their associated values stay there for as long as you need them. Don't delete it as it's got the cockles registration details in there, not just observations and temperatures. It's best to not use <code>-</code> or <code>SPACE</code> characters in the location as <code>-</code> confuses the JSON thinking its a cockle and using <code>SPACE</code> means you have to replace every <code>SPACE</code> with <code>%20</code></li>
+<li>Once you've submitted your observation the location defines a data endpoint (<em>ie</em> the <strong>address</strong> on the cocklerake server) for the observation: the observation is the <strong>value</strong> of the data: <em>ie</em> the string you've typed in which can be as long as you like. It also timestamps the observation string, the <strong>recorded_at</strong> so you could query that in your javascript.</li>
+</ul>
+<p>So if you make an observation, the string <strong>&quot;I've just made a generic observation&quot;</strong> with the location <strong>&quot;location&quot;</strong> and submit it then you can find it at <a href="http://domesticscience.local:5000/location">/location</a> and typically it would return the JSON:</p>
+<pre><code>{&quot;recorded_at&quot;:&quot;2016-10-25 16:25:21.877885&quot;, &quot;value&quot;:I&#39;ve just made a generic observation!}</code></pre>
+<h3 id="editing-the-files-workflow-etc">Editing the files, workflow etc</h3>
+<p>Your best working headless over ssh to edit stuff either directly in vim or build your adventures in the local Twine app on your laptop, then sending new files with secure copy <code>scp</code>. You just ssh through the <code>domesticscience</code> WiFi</p>
+<h3 id="uploading-files">Uploading files</h3>
+<p>You can send any file from your laptop as long as you are on the <code>domesticscience.local</code> network, for example:</p>
+<p><code>HwaYoungsMac$ scp /path/to/my/amazingfile pi@domesticscience.local:/home/pi</code></p>
+<p>You'll need the password <code>raspberry</code> again.</p>
+<p>You can then move it from <code>/home/pi</code> to the apache server <code>html</code> folder over ssh on the pi. So when connected by ssh to the pi:</p>
+<p><code>pi@domesticscience:~ $ sudo mv ~/amazingfile /var/www/html</code></p>
+<p>You'll need the password and you may need to change permissions of the new file with <code>sudo chmod 644 /location/of/myamazingfile.html</code></p>
+<p>You can put all yr web stuff in there <code>/var/www/html</code></p>
+<p>Your in the sudo'ers group so be careful, with great power comes great responsibility etc etc...</p>
+<p>You can also send messages from the pi to your mac (but from the mac client side)</p>
+<p><code>HwaYoungsMac$ scp pi@domesticscience.local:/var/www/html/MyFileIWantToEdit.html /path/where/i/want/my/amazingfile</code></p>
+<h2 id="making-your-adventures">Making your adventures</h2>
+<p>Now head over to the <a href="/TwineDemo.html">Twine 2 Demo</a> to see how to pull &amp; interact with the data</p>
+<h3 id="pop-up-pocketmine">Pop up Pocketmine</h3>
+<p>There is a <code>pocketmine</code> file in <code>/etc/init.d</code> that sets off the pop-up pocketmine server that sends messages to node-red but it's set to off as the servers outdated now.</p>
+<p>To turn it off rename it to pocketmine.off To turn it on rename it to pocketmine</p>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>Twine JSON shim using a cockle</title>
+    </head>
+    <body>
+        <h2>Pulling temperature from a cockle</h2>
+        <p>Blah blah text adventure of things blah</p>
+        <br>It is <span id="weather-temp">???</span> degrees outside.  Well, it was at <span id="weather-timestamp">sometime or other</span>.  There are <span id="number">some</span> people in space at the moment.
+        <script>
+            // This talks to a locally running CockleRake flask server
+            $.ajax({
+                dataType: "json",
+                url: "http://localhost:5000/ainsdale-meols-mersey",
+                success: function( result ) {
+                    $( "#weather-temp" ).html( "<strong>" + result.value + "</strong>" );
+                    $( "#weather-timestamp" ).html( "<strong>" + result.recorded_at + "</strong>" );
+                }
+            });
+
+            // This talks to a shim (also in Flask in the simple example we used), to get the Space JSON
+
+            $.getJSON('http://localhost:5000/space', function(data) {
+                console.log(data['number']);
+                console.log(data.number);
+                $( "#space" ).html( "<strong>" + data['number'] + "</strong>" );});
+        </script>                           
+    </body>
+</html>

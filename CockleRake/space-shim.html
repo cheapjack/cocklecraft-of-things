@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Twine JSON shim using a cockle</title>
+    </head>
+    <body>                                 
+       <h2>Counting people in space from open-notify</h2>
+        <p>Blah blah text adventure of things blah</p>
+        <!--<br>It is <span id="weather-temp">???</span> degrees outside.  Well, it was at <span id="weather-timestamp">sometime or other</span>.-->
+        <br>Ok, There are <span id="space">some</span> people in space at the moment.
+         <!--This talks to a shim (also in Flask in the simple example we used), to get the Space JSON-->
+         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript">
+             console.log("hello");
+             (function($) {
+              $.getJSON('http://localhost:5000/space', function(data) {
+                  console.log(data['number']);
+                  console.log(data.number);
+                  console.log(data['message']);
+                  console.log(data.string);
+                  $("#space").html( "<strong>" + data['number'] + "</strong>");
+                  });
+              })(jQuery);
+         </script>
+     </body>
+</html>
