@@ -1,6 +1,6 @@
 ## Getting Started with Cockles for Domestic Science 
 
-![http://drinkme.textadventuretime.co.uk/wp-content/uploads/2016/11/header-1.png]
+<img src="http://drinkme.textadventuretime.co.uk/wp-content/uploads/2016/11/header-1.png" width="600">
 
 Using the cocklecraft-of-things with Twine for Interactive Non-Fiction Adventures and fun with freshwater in Brazil for [Beba-Me | Drink-Me](http://drinkme.textadventuretime.co.uk/) for [Domestic Science](http://domesticscience.org.uk)
 
