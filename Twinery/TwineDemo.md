@@ -77,8 +77,6 @@ Once your happy with it you need to send it to the pi apache server
 
 `HwaYoungsMac$ scp /path/to/my/amazingfile pi@domesticscience.local:/home/pi`
 
-You'll need the password `raspberry` again.
-
 You can then move it from `/home/pi` to the apache server `html` folder over ssh on the pi. So when connected by ssh to the pi:
 
 `pi@domesticscience:~ $ sudo mv ~/amazingfile /var/www/html`
