@@ -1,4 +1,5 @@
-## Make a test Twine Story & upload to `/var/www/html`
+## Make a test Twine Story
+Download [Twine](http://twinery.org/) and get used to making interactive fiction. Build your completed game by exporting the game `html` file. Upload to the web or in this case the local Apache webserver html folder at `/var/www/html` on a Raspberry Pi.
 
 Use an installed version of `Twine v2.0.8-11` to keep things offline
 
