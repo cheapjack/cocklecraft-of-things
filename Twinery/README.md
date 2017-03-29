@@ -4,7 +4,7 @@
 
 Using the cocklecraft-of-things with Twine for Interactive Non-Fiction Adventures and fun with freshwater in Brazil for [Beba-Me | Drink-Me](http://drinkme.textadventuretime.co.uk/) for [Domestic Science](http://domesticscience.org.uk). This experimental branch was designed to help make mobile text adventures served from a Raspberry Pi receive temperature readings from the cockle connected to the Pi's Wireless access point, using the CockleRake flask server to pass this on.
 
-It's meant to be a small and human readable system for understanding & building the Internet of Things for beginners. It's a proof of concept for [Domestic Science](http://domesticscience.org.uk) on using real data in text adventures and interactive *non*-fiction. It's in python because of it's popularity in the Raspberry Pi community and uses javascript calls to the JSON the CockleRake serves. It was meant to help do this in the Amazon rainforest with limited access to the netowrk and power.
+It's meant to be a small and human readable system for understanding & building the Internet of Things for beginners. It's a proof of concept for [Domestic Science](http://domesticscience.org.uk) on using real data in text adventures and interactive *non*-fiction. It's in python because of it's popularity in the Raspberry Pi community and uses javascript calls in Twine and in the Twine generated `html` file to parse the `JSON` the `CockleRake` serves. It was meant to help do this in the Amazon rainforest with limited access to the netowrk and power.
 
 Have a look in the `~/cocklecraft-of-things` folder for more detailed  documentation.
 
